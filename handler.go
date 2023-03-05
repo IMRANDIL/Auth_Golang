@@ -9,6 +9,11 @@ var users = map[string]string{
 	"user2": "password2",
 }
 
+type Credentials struct {
+	Username string
+	Password string
+}
+
 func Login(w http.ResponseWriter, r *http.Request) {
 
 }
