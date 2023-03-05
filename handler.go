@@ -50,6 +50,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+	})
+
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
