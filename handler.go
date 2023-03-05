@@ -1,6 +1,11 @@
 package main
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
+)
 
 var jwtKey = []byte("secret_key")
 
@@ -10,11 +15,30 @@ var users = map[string]string{
 }
 
 type Credentials struct {
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	var credentials Credentials
+	err := json.NewDecoder(r.Body).Decode(&credentials)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	expectedPassword, ok := users[credentials.Password]
+
+	if !ok || expectedPassword != credentials.Password {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 }
 
