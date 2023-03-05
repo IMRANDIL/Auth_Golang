@@ -28,6 +28,7 @@ type Claims struct {
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var credentials Credentials
+
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 
 	if err != nil {
@@ -35,7 +36,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expectedPassword, ok := users[credentials.Password]
+	expectedPassword, ok := users[credentials.Username]
 
 	if !ok || expectedPassword != credentials.Password {
 		w.WriteHeader(http.StatusUnauthorized)
